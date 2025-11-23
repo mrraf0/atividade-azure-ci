@@ -1,0 +1,35 @@
+- name: Testar Azure via REST (sem SDK)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    mgmt_resource: "https://management.azure.com"
+    api_version_subs: "2020-01-01" # estável
+
+  tasks:
+
+    - name: Obter token do Azure via CLI
+      ansible.builtin.command: >
+        az account get-access-token
+        --resource {{ mgmt_resource }}
+        --query accessToken -o tsv
+      register: token_cmd
+      changed_when: false
+
+    - name: Listar subscriptions via REST
+      ansible.builtin.uri:
+        url: "{{ mgmt_resource }}/subscriptions?api-version={{ api_version_subs }}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ token_cmd.stdout }}"
+        return_content: true
+        status_code: 200
+      register: subs_resp
+
+    - name: Mostrar IDs das subscriptions
+      ansible.builtin.debug:
+        msg: "{{ item.subscriptionId }}"
+      loop: "{{ (subs_resp.json.value | default([])) }}"
+      loop_control:
+        label: "{{ item.displayName | default(item.subscriptionId) }}"

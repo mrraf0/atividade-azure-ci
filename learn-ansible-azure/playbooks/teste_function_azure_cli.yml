@@ -1,0 +1,19 @@
+- name: Configure Azure Function App
+  hosts: localhost
+  connection: local
+
+  vars:
+    ansible_python_interpreter: "{{ ansible_playbook_python }}"
+
+  tasks:
+    - name: Ensure Azure Function Exists
+      azure.azcollection.azure_rm_functionapp:
+        name: senaclabazurefunctionmtb0dhtl
+        resource_group: senactfresourcegroup
+        plan:
+          name: senac-functions-plan
+          is_linux: true
+          sku: Y1
+        storage_account_name: senacfucstoragemtb0dhtl
+        state: present
+      register: azure_function
