@@ -1,6 +1,10 @@
 # Local .terraform directories
 .terraform/
 
+learn-terraform/.terraform
+learn-terraform/*.tfstate
+learn-terraform/*.tfstate.*
+
 # .tfstate files
 *.tfstate
 *.tfstate.*
