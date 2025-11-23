@@ -14,6 +14,11 @@
           name: senac-functions-plan
           is_linux: true
           sku: Y1
+
+        app_settings:
+          FUNCTIONS_WORKER_RUNTIME: python
+          PYTHON_VERSION: "3.10"
+
         storage_account_name: senacfucstoragemtb0dhtl
         state: present
       register: azure_function
