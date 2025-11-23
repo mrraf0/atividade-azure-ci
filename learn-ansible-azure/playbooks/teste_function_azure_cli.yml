@@ -1,24 +1,16 @@
-- name: Configure Azure Function App
+- name: Configurar Azure Function
   hosts: localhost
   connection: local
-
   vars:
     ansible_python_interpreter: "{{ ansible_playbook_python }}"
 
   tasks:
-    - name: Ensure Azure Function Exists
-      azure.azcollection.azure_rm_functionapp:
+    - name: Garantir que a Function esteja Always On e com Python 3.10
+      azure_rm_webapp:
         name: senaclabazurefunctionmtb0dhtl
         resource_group: senactfresourcegroup
-        plan:
-          name: senac-functions-plan
-          is_linux: true
-          sku: Y1
+        frameworks:
+          - name: python
+            version: "3.10"
 
-        app_settings:
-          FUNCTIONS_WORKER_RUNTIME: python
-          PYTHON_VERSION: "3.10"
-
-        storage_account_name: senacfucstoragemtb0dhtl
-        state: present
       register: azure_function
